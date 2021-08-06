@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:user_location_plugin/user_location_plugin.dart';
-import 'utils/strings.dart';
+import 'utils/ui_constants.dart';
 import 'widgets/buttons.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = Strings.defaultPlatformVersion;
+  String _platformVersion = UiConstants.defaultPlatformVersion;
 
   @override
   void initState() {
@@ -27,9 +27,9 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     try {
       platformVersion = await UserLocationPlugin.platformVersion ??
-          Strings.unknownPlatformVersion;
+          UiConstants.unknownPlatformVersion;
     } on PlatformException {
-      platformVersion = Strings.failAtGettingPlatformVersion;
+      platformVersion = UiConstants.failAtGettingPlatformVersion;
     }
     if (!mounted) return;
     setState(() {
@@ -44,26 +44,30 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text(
-            Strings.title,
+            UiConstants.title,
           ),
         ),
         body: Center(
           child: Column(
             children: [
               Text(
-                '${Strings.runningOn} $_platformVersion\n',
+                '${UiConstants.runningOn} $_platformVersion\n',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: UiConstants.platformFontSize,
+                ),
               ),
               ButtonWidget(
                 onPressed: () {
                   UserLocationPlugin.requestPermission;
                 },
-                buttonText: Strings.requestButtonText,
+                buttonText: UiConstants.requestButtonText,
               ),
               ButtonWidget(
                 onPressed: () {
                   UserLocationPlugin.checkPermission;
                 },
-                buttonText: Strings.checkButtonText,
+                buttonText: UiConstants.checkButtonText,
               ),
               StreamBuilder(
                 stream: UserLocationPlugin.permissionEventChannelStream,
@@ -76,7 +80,7 @@ class _MyAppState extends State<MyApp> {
                           snapshot.data.toString(),
                         )
                       : Text(
-                          Strings.emptyString,
+                          UiConstants.emptyString,
                         );
                 },
               ),

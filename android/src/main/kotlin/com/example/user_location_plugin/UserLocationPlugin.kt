@@ -20,7 +20,6 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
 
-
 class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     PluginRegistry.ActivityResultListener {
     private lateinit var channel: MethodChannel
@@ -30,10 +29,8 @@ class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private lateinit var permissionEventSource: EventChannel.EventSink
     private var permissionStreamHandler: EventChannel.StreamHandler =
         object : EventChannel.StreamHandler {
-            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-                if (events != null) {
-                    permissionEventSource = events
-                }
+            override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
+                permissionEventSource = events
             }
 
             override fun onCancel(arguments: Any?) {
@@ -59,9 +56,8 @@ class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun getPlatformVersion(result: Result) {
-        result.success("Android ${android.os.Build.VERSION.RELEASE}")
+        result.success("${ANDROID} ${android.os.Build.VERSION.RELEASE}")
     }
-
 
     private fun requestPermission(result: Result) {
         context?.run {
@@ -100,7 +96,6 @@ class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         return permitted
     }
 
-
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
     }
@@ -122,7 +117,6 @@ class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         Log.i("onDetachedFromActivty", "onDetachedFromActivity")
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         Log.i("onActivityResult", "onActivityResult")
         return true
@@ -137,5 +131,7 @@ class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         const val PERMISSION_GRANTED = "Permission Granted"
         const val PERMISSION_DENIED = "Permission Denied"
         const val REQUEST_PERMISSION_CODE = 500
+        const val ANDROID = "Android"
     }
 }
+
