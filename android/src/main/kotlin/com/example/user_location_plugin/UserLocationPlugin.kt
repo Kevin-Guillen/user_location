@@ -26,8 +26,6 @@ class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
     private lateinit var activity: Activity
-
-
     private lateinit var permissionEventChannel: EventChannel
     private lateinit var permissionEventSource: EventChannel.EventSink
     private var permissionStreamHandler: EventChannel.StreamHandler =
@@ -39,7 +37,6 @@ class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
 
             override fun onCancel(arguments: Any?) {
-
             }
         }
 
@@ -59,6 +56,10 @@ class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             CHECK_PERMISSION -> checkPermission(result)
             else -> result.notImplemented()
         }
+    }
+
+    private fun getPlatformVersion(result: Result) {
+        result.success("Android ${android.os.Build.VERSION.RELEASE}")
     }
 
 
@@ -121,16 +122,13 @@ class UserLocationPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         Log.i("onDetachedFromActivty", "onDetachedFromActivity")
     }
 
-    private fun getPlatformVersion(result: Result) {
-        result.success("Android ${android.os.Build.VERSION.RELEASE}")
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         Log.i("onActivityResult", "onActivityResult")
         return true
     }
 
-    companion object PluginConstants {
+    companion object {
         const val USER_LOCATION_PLUGIN = "user_location_plugin"
         const val PERMISSION_EVENT_CHANNEL = "permission_event_channel"
         const val GET_PLATFORM_VERSION = "getPlatformVersion"

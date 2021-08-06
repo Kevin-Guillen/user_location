@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:user_location_plugin/user_location_plugin.dart';
-import 'utils/buttons_strings.dart';
+import 'utils/strings.dart';
 import 'widgets/buttons.dart';
 
 void main() {
@@ -15,25 +15,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  String _platformVersion = Strings.defaultPlatformVersion;
 
   @override
   void initState() {
     super.initState();
+    initPlatformState();
   }
 
   Future<void> initPlatformState() async {
     String platformVersion;
-
     try {
       platformVersion = await UserLocationPlugin.platformVersion ??
-          'Unknown platform version';
+          Strings.unknownPlatformVersion;
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      platformVersion = Strings.failAtGettingPlatformVersion;
     }
-
     if (!mounted) return;
-
     setState(() {
       _platformVersion = platformVersion;
     });
@@ -46,23 +44,26 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text(
-            ButtonsStrings.title,
+            Strings.title,
           ),
         ),
         body: Center(
           child: Column(
             children: [
+              Text(
+                '${Strings.runningOn} $_platformVersion\n',
+              ),
               ButtonWidget(
                 onPressed: () {
                   UserLocationPlugin.requestPermission;
                 },
-                buttonText: ButtonsStrings.requestButtonText,
+                buttonText: Strings.requestButtonText,
               ),
               ButtonWidget(
                 onPressed: () {
                   UserLocationPlugin.checkPermission;
                 },
-                buttonText: ButtonsStrings.checkButtonText,
+                buttonText: Strings.checkButtonText,
               ),
               StreamBuilder(
                 stream: UserLocationPlugin.permissionEventChannelStream,
@@ -75,7 +76,7 @@ class _MyAppState extends State<MyApp> {
                           snapshot.data.toString(),
                         )
                       : Text(
-                          '',
+                          Strings.emptyString,
                         );
                 },
               ),
